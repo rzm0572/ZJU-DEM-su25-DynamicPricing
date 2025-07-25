@@ -71,15 +71,15 @@ $q$：令买家类型的分布为 $q$，其中第 $i$ 种买家的概率为 $q_i
 
 === 附加假设
 
-==== 假设1：卖家的价格函数是平滑的
+==== 假设1：买家的估值函数是平滑的
 
-对于买家的价格函数，相近的数据量价格不会差太多：
+对于买家的估值函数，相近的数据量效用不会差太多：
 
 $forall n, n' in {0,1,2,dots,N}, v_i (n + n′) - v_i (n) <= frac(L,N) n'$ 
 
 ==== 假设2：数据的效用是边际效用递减的
 
-买的数据越多，数据越不值钱
+买家买的数据越多，数据越不值钱
 
 $exists J > 0 , forall  i in {0,1,2,dots,m}, forall n in {0,1,2,dots,N}, v_i (n + 1) - v_i (n) <= frac(J,n)$
 
@@ -102,6 +102,14 @@ $R_T=T dot "OPT" - sum_(t=1)^T p_t (n_(i_t,p_t))$
 $R_T= max_(p in cal(P)) sum_(t=1)^T P(n_(i_t,p))- sum_(t=1)^T p_t (n_(i_t,p_t))$
 
 
+== 过去成果
+
+
+== 未来展望
+
+
+
+
 = Paper Review
 文章除了回顾过往研究以及进行了一些总结与展望，其主要内容集中于如何求出商家的最优定价策略，即让商家在不断的买卖中算出一个定价，使得自己挣到最多的钱。
 
@@ -111,13 +119,15 @@ $R_T= max_(p in cal(P)) sum_(t=1)^T P(n_(i_t,p))- sum_(t=1)^T p_t (n_(i_t,p_t))$
 
 文章正文和附录包含了对于这些算法“为什么好”的证明。
 
-== 选择哪些卖家的估值函数
+== 选择哪些卖家的定价函数
 
 因为显然卖家的定价曲线/函数有无穷多个，因为从 N 个自然数映射到 [0,1] 的曲线是无限多的，我们需要：
 
 1. 用“算法”从中选择有限个简单曲线/函数，每个简单函数/曲线只有至多 $m$ 个 $f(n+1)-f(n)>0$ 的点（即 m-step 的，这就是后文用到的 m-step 的定义）。
 
-2. 证明这些曲线够用
+2. 证明这些定价函数够用，即对估值造成的损失不大，且总数不能太多
+
+3. 接下来会分别先证明一个重要引理，然后按照三个附加假设逐个分析在越来越严格的定价函数限制下我们如何选择定价函数，并证明这些函数足够好。
 
 === 引理 3.1：可以用简单的（m-step）函数代替所有的卖家估值函数
 
@@ -134,7 +144,7 @@ $R_T= max_(p in cal(P)) sum_(t=1)^T P(n_(i_t,p))- sum_(t=1)^T p_t (n_(i_t,p_t))$
 m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 m-step 函数。所以必然有一收益更高的 m-step 函数能代替所有的卖家估值函数。
 
 
-=== 算法1：估值函数仅符合单调递增时的选择
+=== 算法1：估值函数仅符合单调递增时，如何选择卖家定价函数
 
 输入误差范围 $epsilon$，买家种类 $m$
 
@@ -204,7 +214,7 @@ $<= (frac(e (N-1),m))^m dot (frac(e |W|,m))^m $
 
 $<= (frac(e (N-1),m))^m dot (e ceil(2+epsilon) ceil(log_(1+epsilon)(1/epsilon)))^m $
 
-==== 步骤 4 ：定理 3.1 成立
+==== 步骤 4 ：定理 3.1 成立，选出的函数够好
 
 综上所述：
 $"rev"(p') >= frac("rev"(tilde(p)),1+epsilon) >= frac("OPT" - epsilon,1+epsilon)$
@@ -219,14 +229,108 @@ $"OPT" - epsilon >="OPT" +  epsilon "OPT" - 2 epsilon$
 
 $"rev"(p') >= frac("OPT" - epsilon,1+epsilon) >= "OPT" - frac(2 epsilon,1+epsilon) = "OPT" - cal(O)(epsilon)$
 
+==== 步骤 5 ：定理 3.1 成立，证明选出的函数足够少
+
 由于 $log_(1+epsilon)(1/epsilon) << frac(1,epsilon) $，所以 $|overline(P)| in tilde(O)((N/epsilon)^m)$，因为 $(frac(e (N-1),m))^m dot (e ceil(2+epsilon) ceil(log_(1+epsilon)(1/epsilon)))^m $中，$(frac(e (N-1),m))^m$ 放缩为 $N^m$，$(e ceil(2+epsilon) ceil(log_(1+epsilon)(1/epsilon)))^m$ 放缩为  $epsilon^(-m)$，所以  $|overline(P)| in tilde(O)((N/epsilon)^m)$。
 
-=== 加上平滑性的性质
+=== 算法 5 ：加上平滑性的限制后如何选择卖家定价函数
+
+输入误差范围 $epsilon$，买家种类 $m$，Smoothness constant $L$（$forall n, n' in {0,1,2,dots,N}, v_i (n + n′) - v_i (n) <= frac(L,N) n'$ ）
+
+首先用等比数列 $Z_i$ 对于卖家估值函数的值域作切分。
+
+$Z_i={ epsilon (1+epsilon)^i, forall i=0,1,2,dots,ceil(log_(1+epsilon)frac(1,epsilon))}$
+
+接着对每一个部分作插值进一步细化值域
+
+$W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) }$
+
+$W = union_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i$
+
+以上步骤和算法 1 完全相同。
+
+然后把 $[0,N]$ 划分为均匀网络，m-step 函数的跳跃点仅取这个划分中的点。
+
+离散化间隔 $delta = floor(frac(epsilon N,m L))$表示划分的长度。
+
+定义跳跃点可以取的点为 $N_s = {delta k:k in {0,1,2,dots,ceil(frac(N,delta))} }$。
+
+然后输出 $overline(cal(P))$ ，表示所有从 $N_s$ 到 $W$ 的 m-step 映射。
+
+=== 定理 3.2：算法5选出的函数收益够高，数量也够少
 
 
-=== 加上边际效用递减的性质
+在平滑性假设下，我们可以在选出的定价函数中找到一个函数替代最优函数但是损失很小。
+
+$ exists p in overline(P),"rev"(p) >= "OPT" - O( epsilon )$
 
 
+我们选出的定价函数数量很少
+
+集合大小 $|overline(P)| in tilde(O) (( frac(L,epsilon^2))^m ) $
+
+
+证明过程如下：
+
+==== 步骤 1 ：构造 m-step 函数
+
+由引理 3.1：存在一个至多 m 个跳跃点的函数 $p^*$，使得 $"OPT"<="rev"(p^*)$。
+
+如果 $p^*$ 中相邻的阶梯值之差小于 $frac(epsilon,m)$ 那么消去这个阶梯，并且连着后面的所有函数值一起调整。
+
+详细的来说，对于每个函数值，函数 $p^*$ 中这个点左边有多少个跳跃点的阶梯值之差小于 $frac(epsilon,m)$ ，那么它的值就应该减少这些跳跃点差的值之和。
+
+这样就构造出了函数 $p'$。
+
+这一步相当于降价，并且越贵的数据量降价越多，那么原本卖数据的客户仍然会选择买至少不少于原先的数据量。
+
+每一名客户少付的钱最多为函数下降的值，最多下降 m 次，每次最多 $frac(epsilon,m)$ ，所以总的来说 $p'$ 对收益的期望即 OPT 带来的损失不超过 $epsilon$。
+
+==== 步骤 2：构造 $overline(P)$ 中的函数 $p$
+
+$p'$ 可以用它的 k 个跳跃点来表示，$p' = {p'(n_(i))}$，其中 $n_(i)$ 是 $p'$ 的跳跃点。
+
+我们将 $n_i$ 修改为 $N_s$ （这是我们刚刚求出的 $overline(P)$ 中可以跳变的点集）中比 $n_i$ 小的最大的点，将 $p'(n_i)$ 调整为 $p'(n_i) - i frac(epsilon,m)$ 附近的某个 $W$ 中的值。用新的这 k 个跳变点，我们得到了 m-step 函数 $p$
+
+因为 $W$ 中两个点之间距离为 $frac(epsilon,m)$ ，所以 $p'(n_i)$ 调整为 $p'(n_i) - i frac(epsilon,m)$ 附近的某个 $W$ 中的值，这就保证了 $p$ 属于 $overline(P)$。并且显然也是买的数据越多降价越厉害。
+
+
+==== 步骤 3：证明 $p$ 与 OPT 相差不大，选出的函数收益够高
+
+买家会不会因为我们向左调整跳变点，导致这一段距离数据涨价，导致买家购买的数据量减少或者不买呢？
+
+假设 $n_i$ 是 $p'$ 下第 i 个跳跃点 $n'_i$ 在数据网格 $N_S$ 上的取整结果，由于平滑性，买家在这两个点上差距不多，$v(n_i) >= v(n'_i) - delta frac(L,N)$，因此这一段相当于先进行了一个至多不超过 $frac(L,N)$ 乘区间长度即 $frac(L,N) dot frac(epsilon N,m L) = frac(epsilon,m)$ 的涨价，又多了一次（因为相当于从左边一个区间到了右边一个区间）大小为 $frac(epsilon,m)$ 的降价，所以总的来说降价还是多了了，并且降价的幅度在自己的左侧区间和右侧区间之间。总的来说还是符合数据越多降价越多的性质，因此买家显然不会降低自己的数据购买量，因为本来更少的数据就不如原先的选择有吸引力，而且打折力度也更小。
+
+
+假如买家不会因为价格改变而减少数据购买，从 $p'$ 到 $p$ 的损失为 $i frac(epsilon,m) <= m frac(epsilon,m)$，所以 $p$ 与 $p'$ 相差至多为 $epsilon$。
+
+假如买家增加数据购买量，显然亏的钱不会多于买家购买量不变。
+
+综上所述，$p$ 与 $p'$ 相差至多为 $epsilon$。
+
+由于 $p' >= "OPT" - epsilon$，所以 $p >= "OPT" - 2epsilon = "OPT" - cal(O)(epsilon)$。
+
+==== 步骤 4 ：算法1选出的函数数量够少
+
+由于本构造方法数量仅仅相当于缩小了自变量取值，因而直接沿用上一个结果
+
+$|overline(P)|<= (frac(e (N-1),m))^m dot (e ceil(2+epsilon) ceil(log_(1+epsilon)(1/epsilon)))^m $
+
+将 $N$ 替换为 $|N_s| <= N/delta <= frac(m L,epsilon) $ 即可。
+
+$|overline(P)|<= (frac(e (|N_s|-1),m))^m dot (e ceil(2+epsilon) ceil(log_(1+epsilon)(1/epsilon)))^m $
+
+$(frac(e (|N_s|-1),m))^m$ 去掉所有定值就是放缩为 $(frac(L,epsilon))^(m)$，$(e ceil(2+epsilon) ceil(log_(1+epsilon)(1/epsilon)))^m$ 放缩为  $epsilon^(-m)$，所以  $|overline(P)| in tilde(O)((L/epsilon^2)^m)$。
+
+
+=== 算法 2 ：加上边际效用递减的限制后如何选择卖家定价函数
+
+
+
+=== 定理 3.3：算法2选出的函数收益够高，数量也够少
+
+
+==== 
 
 
 = Algorithm Specification
