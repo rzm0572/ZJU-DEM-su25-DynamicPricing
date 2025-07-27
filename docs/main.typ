@@ -195,6 +195,10 @@ $
 m-step ：一个函数 $f$ 对于 $[N]$ 到 $[0,1]$ 的单调不减函数，满足至多有 $m$ 个点 $n in {0,1,2,dots,N-1}, f(n+1)-f(n)>0$。
 
 
+#axiom(name: strong("Lemma 1"))[
+    可以用简单的 m-step 函数代替所有的卖家估值函数。具体地，如果有 $m$ 种买家，对于任何一个卖家的非递减定价函数，都有 m-step 函数收益不低于这个定价函数。
+]
+
 这个引理的内容是如果有 $m$ 种买家，对于任何一个卖家的非递减定价函数，都有 m-step 函数收益不低于这个定价函数。
 
 
@@ -247,7 +251,7 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
     然后输出 $overline(cal(P))$ ，表示所有从 ${0,1,2,dots,N}$ 到 $W$ 的 m-step 映射。
 
 #theorem[
-    算法 1 是好的估价函数选择算法，其中 $overline(cal(P)) in tilde(cal(O)) ((N/epsilon)^m)$。
+    算法 1 是好的估价函数选择算法，不仅损失够小，$exists p in overline(cal(P)) ,"rev"(p) >= "OPT" - cal(O) (epsilon)$，而且选出的函数数量足够少， $overline(cal(P)) in tilde(cal(O)) ((N/epsilon)^m)$。
 ]
 
 下面我们给出该算法是好的证明：
@@ -255,7 +259,7 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
 #proof[
     我们先提出并证明三个引理：
 
-    1. #axiom(name: strong("Axiom A.1"))[
+    1. #axiom(name: strong("Lemma A.1"))[
             $forall epsilon$，存在定价函数 $tilde(p): [N] -> [epsilon, 1]$，使得 $"rev"( tilde(p)) >= "OPT" - epsilon$。
         ]
 
@@ -263,7 +267,7 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
 
         如果买家购买的数据量价格不变，那么买家带来的收益不变，但是如果买家购买的数据量价格涨价，那么即使所有买家买的数据都涨价导致买家都不买了，那么损失的期望也是 $epsilon times 1 = epsilon$，所以卖一次的期望收益最多减少 $epsilon$，即引理成立。
 
-    2. #axiom(name: strong("Axiom A.2"))[
+    2. #axiom(name: strong("Lemma A.2"))[
             在使用算法 1 从无穷个定价函数中选出的 $overline(cal(P))$ 中，有一函数离刚刚构造出的 $tilde(p)$ 足够近。即 $exists p in overline(cal(P))$，使得 $"rev"(p) >= "rev"(tilde(p)) /(1+epsilon)$。
         ]
 
@@ -275,7 +279,7 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
 
         那么买家会不会买更少的数据导致更小的卖家收益呢？答案是不会。因为根据 $Z$ 的构造方法，$Z_i$ 是等比数列，这导致 $Z_i$ 越大越稀疏，而 $W_i$ 是在 $Z_i$ 的基础上插值的，因而 $W_i$ 越大也会越来越稀疏。而数据卖的越多价格越贵，因此价格越高降价越多，自然买家只会不改变购买数量或者买更多的数量。这样要么收益增加，要么收益大于 $"rev"(tilde(p)) /(1+epsilon)$。
     
-    3. #axiom(name: strong("Axiom A.3"))[
+    3. #axiom(name: strong("Lemma A.3"))[
             从无穷个卖家定价函数中用算法 1 选出的数量够少。只要满足 $n>m$ 的前提，就有
             
             $
@@ -372,7 +376,7 @@ $W = union_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i$
 最后输出 $overline(cal(P))$ ，表示所有从 $N_s$ 到 $W$ 的 m-step 映射。
 
 #theorem(name: strong("Theorem 3.2"))[
-    算法 5 是好的估价函数选择算法，其中 $|overline(cal(P))| in tilde(cal(O)) (( frac(L,epsilon^2))^m )$。
+    算法 5 是好的估价函数选择算法，不仅损失够小，$exists p in overline(cal(P)) ,"rev"(p) >= "OPT" - cal(O) (epsilon)$，而且选出的函数数量足够少， $|overline(cal(P))| in tilde(cal(O)) (( frac(L,epsilon^2))^m )$。
 ]
 
 
@@ -472,7 +476,7 @@ $W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon)
     定义可以取跳跃点的点为 $N_D = {1,2,dots,floor(frac(2 J m,epsilon^2))} union.big Q$，挑选出的卖家定价函数集合为 $overline(cal(P))$ 表示所有只能在 $N_D$ 跳变，定义域在 $[N]$ 且取值只能在 $W$ 的单调不减 m-step 函数。
 
 #theorem(name: strong("Theorem 3.3"))[
-    算法 2 是好的估价函数选择算法，其中 $|overline(cal(P))| <= O((frac(J,epsilon^2))^m log^m ((N epsilon^2)/(J m)) dot (log^m_(1+epsilon) (1/epsilon)) )  in tilde(O)((J/epsilon^3)^m)$。
+    算法 2 是好的估价函数选择算法，不仅损失够小，$exists p in overline(cal(P)) ,"rev"(p) >= "OPT" - cal(O) (epsilon)$，而且选出的函数数量足够少， $|overline(cal(P))| <= O((frac(J,epsilon^2))^m log^m ((N epsilon^2)/(J m)) dot (log^m_(1+epsilon) (1/epsilon)) )  in tilde(O)((J/epsilon^3)^m)$。
 ]
 
 证明过程如下：
@@ -647,6 +651,9 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 如果这轮买家没有买数据，那么我们自然不知道这个买家的类型，我们只能估计可能带来的收益。因为所有买家的估值曲线 $v_i$ 都是已知信息，所以我们可以算出所有本轮因为定价 $p_t$ 不会购买数据的买家的类型集合 $S_t^c$，然后对于其中的任何一个类型 $i$，算出其对每一个定价函数 $p$，会买 $n_(i,p)$ 个数据，产生 $p(n_(i,p))$ 的收益，本轮函数 $p$ 的估计收益 $r_t (p)$ 即为这些“可能存在但实际上没有”的收益之和。即 $r_t (p) = sum_(i in S_t^c) p(n_(i,p))$
 
 以上这两步需要对所有的卖家定价函数 $p in overline(cal(P))$ 进行。
+
+=== 定理 5.1：算法 4 给出了足够优秀的的卖家定价函数
+
 
 = Algorithm Specification
 
