@@ -749,6 +749,33 @@
   },
   color: rgb(120, 120, 120),
 )
+#let axiom(it, name: none) = blockx(
+  it,
+  name: if(name != none) {
+    name
+  } else {
+    strong("Axiom")
+  },
+  color: rgb(230, 194, 87)
+)
+#let theorem(it, name: none) = blockx(
+  it,
+  name: if(name != none) {
+    name
+  } else {
+    strong("Theorem")
+  },
+  color: rgb(87, 127, 230)
+)
+#let definition(it, name: none) = blockx(
+  it,
+  name: if (name != none) {
+    name
+  } else {
+    strong("Definition")
+  },
+  color: rgb(0, 133, 101),
+)
 #let abstract(it, name: none) = blockx(
   it,
   name: if (name != none) {
