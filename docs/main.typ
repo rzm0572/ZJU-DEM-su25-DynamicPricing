@@ -649,6 +649,43 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 #proof[
 
+1. 将遗憾值切分
+
+将遗憾值 $R_T$ 从最优值-实际值改写为（最优值-可能达到的最优值）+（可能达到的最优值-实际值），即 $max_(p in cal(P)) sum_(t=1)^T r(i_t,p) - max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) + max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)$
+
+$max_(p in cal(P)) sum_(t=1)^T r(i_t,p) - max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p)$ 这个部分表示由于我们从所有定价函数中选了一部分，导致可能实际上达不到最优，实际的最优与我们的最优差了多少呢？
+
+我们在选择函数的算法中那一部分已经知道了这个差距范围是 $T dot cal(O)(epsilon) = T dot cal(O) (frac(1,sqrt(T))) = cal(O) (sqrt(T))$
+
+接下来我们只需要研究在我们选出的 $overline(cal(P))$ 集合中，我们逼近可以选择的最优函数的过程造成了什么损失了。以下的引理 B.1 证明证明了我们算法过程中的期望遗憾不是很大。
+
+#axiom(name: strong("Theorem B.1"))[
+$    
+bb(E)[max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)] in cal(O) (m sqrt(T log(|overline(cal(P))|)))
+$
+]
+遗憾为真实收益
+
+将遗憾切分为三项：
+
+1. 真实的收益和最优的收益之差
+
+$bb(E)[ sum_(t=1)^T (r(i_t,p) - r_t(p^*))] <= 0 $ 由于玩家买则估计收益就是真实收益，不买我们仍然有最优收益，所以估计收益大于实际收益，所以这个期望小于 0 。
+
+2. 估计的收益与下一轮收益的差的期望
+
+$bb(E) sum_(t=1)^T (r_t (p^*) - r_t (p_(t+1))) <= (1+log(|overline(cal(P))|))/ theta$ 
+
+
+由于我们之前算的 $|overline(cal(P))|$ 是一个 $x^m$ 的形式，所以带入后 
+
+$
+  bb(E)[max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)] in cal(O) (m sqrt(T log(|overline(cal(P))|))) \ 
+  in cal(O) (m sqrt(T log(x^m))) in tilde(cal(O)) (m dot sqrt(T m)) in tilde(cal(O)) (m^(3/2) sqrt(T))
+  
+$
+
+
 ]
 
 
