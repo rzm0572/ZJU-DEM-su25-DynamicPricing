@@ -357,21 +357,13 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
     接着对每一个部分作插值进一步细化值域：
 
     $
-        W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) } \
-        W = union.big_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i
+        W_i &= { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)} \
+        W &= union.big_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i
     $
-
-$W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)}$
-
-$W = union_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i$
 
 以上步骤和算法 1 完全相同。
 
-然后把 $[0,N]$ 划分为均匀网络，m-step 函数的跳跃点仅取这个划分中的点。
-
-离散化间隔 $delta = floor(frac(epsilon N,m L))$表示划分的长度。
-
-定义跳跃点可以取的点为 $N_s = {delta k:k in {0,1,2,dots,ceil(frac(N,delta))} }$。
+然后把 $[0,N]$ 划分为均匀网络，m-step 函数的跳跃点仅取这个划分中的点，离散化间隔 $delta = floor(frac(epsilon N,m L))$表示划分的长度。定义跳跃点可以取的点为 $N_s = {delta k:k in {0,1,2,dots,ceil(frac(N,delta))} }$。
 
 最后输出 $overline(cal(P))$ ，表示所有从 $N_s$ 到 $W$ 的 m-step 映射。
 
