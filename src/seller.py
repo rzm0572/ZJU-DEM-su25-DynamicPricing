@@ -1,8 +1,13 @@
 import numpy as np
 import math
 import itertools
+from enum import Enum
 
 from buyer import Buyer
+
+class SellerCurveType(Enum):
+    SMOOTH = 0
+    DIMINISHING = 1
 
 class SellerCurve:
     def __init__(self, N: int = 0, m: int = 0, jump_points: list = [], stage_values: list = []):
@@ -65,8 +70,6 @@ class SellerCurveGenerator:
 
         # N_S: 可取的跳跃点集合
         N_S = [delta * k for k in range(1, math.ceil(N / delta) + 1)]
-        # print("Pricing Space : ", W)
-        # print("Demand Space : ", N_S)
 
         # 从 N_S 中任取 m 个元素作为跳跃点可以构造出一条 m-step 定价曲线
         # P: 所有满足条件的 m-step 定价曲线的集合

@@ -706,87 +706,89 @@ m-step ：一个函数 $f$ 对于 $[N]$ 到 $[0,1]$ 的单调不减函数，满�
 
 对于买家的估值函数，相近的数据量效用不会差太多：
 
-$forall n, n' in {0,1,2,dots,N}, v_i (n + n′) - v_i (n) <= frac(L,N) n'$ 
+$
+    forall n, n' in {0,1,2,dots,N}, v_i (n + n′) - v_i (n) <= frac(L,N) n'
+$
 
 
 ==== 边际效用递减
 
-买家买的数据越多，数据越不值钱
+买家买的数据越多，数据越不值钱：
 
-$exists J > 0 , forall  i in {0,1,2,dots,m}, forall n in {0,1,2,dots,N}, v_i (n + 1) - v_i (n) <= frac(J,n)$
+$
+    exists J > 0 , forall  i in {0,1,2,dots,m}, forall n in {0,1,2,dots,N}, v_i (n + 1) - v_i (n) <= frac(J,n)
+$
 
 
 === 算法1：估值函数仅符合单调递增时，如何选择卖家定价函数
 
-输入误差范围 $epsilon$，买家种类 $m$
+输入误差范围 $epsilon$，买家种类 $m$，首先用等比数列 $Z_i$ 对于卖家估值函数的值域作切分：
 
-首先用等比数列 $Z_i$ 对于卖家估值函数的值域作切分。
+$
+    Z_i={ epsilon (1+epsilon)^i, forall i=0,1,2,dots,ceil(log_(1+epsilon)frac(1,epsilon))}
+$
 
-$Z_i={ epsilon (1+epsilon)^i, forall i=0,1,2,dots,ceil(log_(1+epsilon)frac(1,epsilon))}$
+接着对每一个部分作插值，每个大块值域切分，进一步细化值域：
 
-接着对每一个部分作插值，每个大块值域切分，进一步细化值域
+$
+    W_i &= { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)} \
+    W &= union.big_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i
+$
 
-$W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)}$
-
-$W = union_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i$
-
-然后输出 $overline(cal(P))$ ，表示所有从 ${0,1,2,dots,N}$ 到 $W$ 的 m-step 映射
+然后输出 $overline(cal(P))$ ，表示所有从 ${0,1,2,dots,N}$ 到 $W$ 的 m-step 映射。
 
 === 算法 5 ：加上平滑性的限制后如何选择卖家定价函数
 
-输入误差范围 $epsilon$，买家种类 $m$，Smoothness constant $L$（$forall n, n' in {0,1,2,dots,N}, v_i (n + n′) - v_i (n) <= frac(L,N) n'$ ）
+输入误差范围 $epsilon$，买家种类 $m$，平滑常数 $L$，首先用等比数列 $Z_i$ 对于卖家估值函数的值域作切分：
 
-首先用等比数列 $Z_i$ 对于卖家估值函数的值域作切分。
+$
+    Z_i={ epsilon (1+epsilon)^i, forall i=0,1,2,dots,ceil(log_(1+epsilon)frac(1,epsilon))}
+$
 
-$Z_i={ epsilon (1+epsilon)^i, forall i=0,1,2,dots,ceil(log_(1+epsilon)frac(1,epsilon))}$
+接着对每一个部分作插值进一步细化值域：
 
-接着对每一个部分作插值进一步细化值域
-
-$W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)}$
-
-$W = union_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i$
+$
+    W_i &= { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)} \
+    W &= union.big_{i=1}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i
+$
 
 以上步骤和算法 1 完全相同。
 
-然后把 $[0,N]$ 划分为均匀网络，m-step 函数的跳跃点仅取这个划分中的点。
-
-离散化间隔 $delta = floor(frac(epsilon N,m L))$表示划分的长度。
-
-定义跳跃点可以取的点为 $N_s = {delta k:k in {0,1,2,dots,ceil(frac(N,delta))} }$。
-
-然后输出 $overline(cal(P))$ ，表示所有从 $N_s$ 到 $W$ 的 m-step 映射。
+然后把 $[0,N]$ 划分为均匀网络，m-step 函数的跳跃点仅取这个划分中的点，离散化间隔 $delta = floor(frac(epsilon N,m L))$表示划分的长度。定义跳跃点可以取的点为 $N_s = {delta k:k in {0,1,2,dots,ceil(frac(N,delta))} }$，然后输出 $overline(cal(P))$ ，表示所有从 $N_s$ 到 $W$ 的 m-step 映射。
 
 
 
 === 算法 2 ：加上边际效用递减的限制后如何选择卖家定价函数
 
-需要输入边际收益递减常数 J，输入误差范围 $epsilon$，买家种类 $m$，
+需要输入边际收益递减常数 $J$，输入误差范围 $epsilon$，买家种类 $m$，首先用等比数列 $Z_i$ 对于卖家估值函数的值域作切分：
 
-首先用等比数列 $Z_i$ 对于卖家估值函数的值域作切分。
-
-$Z_i={ epsilon (1+epsilon)^i, forall i=0,1,2,dots,ceil(log_(1+epsilon)frac(1,epsilon))}$
+$
+    Z_i={ epsilon (1+epsilon)^i, forall i=0,1,2,dots,ceil(log_(1+epsilon)frac(1,epsilon))}
+$
 
 接着对每一个部分作插值进一步细化值域
 
-$W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)}$
+$
+    W_i &= { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon) m)} \
+    W &= union_{i=2}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i
+$
 
 以上步骤和算法 1 完全相同。
 
-$W = union_{i=2}^ceil(log_(1+epsilon)frac(1,epsilon)) W_i$
-
 对于定价函数的定义域 $[N]$ ，我们先用一个等比数列分割：
 
-$Y_i = floor(frac(2 J m,epsilon^2)(1+epsilon^2)^i ) ~ i=0,1,2,dots,ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m))$
+$
+    Y_i = floor(frac(2 J m,epsilon^2)(1+epsilon^2)^i ) ~ i=0,1,2,dots,ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m))
+$
 
-对于每个小范围 $[Y_i, Y_(i+1))$，用步长 $Y_i dot frac(epsilon^2,2 J m)$ 进行插值
+对于每个小范围 $[Y_i, Y_(i+1))$，用步长 $Y_i dot frac(epsilon^2,2 J m)$ 进行插值：
 
-$Q_i = { Y_i + Y_i dot frac(epsilon^2 k,2 J m) , k=0,1,2,3,dots,floor(2 J m)}$
+$
+    Q_i &= { Y_i + Y_i dot frac(epsilon^2 k,2 J m) , k=0,1,2,3,dots,floor(2 J m)}\
+    Q &= union.big_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i
+$
 
-$Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
-
-定义可以取跳跃点的点为 $N_D = {1,2,dots,floor(frac(2 J m,epsilon^2))} union Q$
-
-挑选出的卖家定价函数集合为 $overline(cal(P))$ 表示所有只能在 $N_D$ 跳变，定义域在 $[N]$ 且取值只能在 $W$ 的单调不减 m-step 函数。
+定义可以取跳跃点的点为 $N_D = {1,2,dots,floor(frac(2 J m,epsilon^2))} union Q$，挑选出的卖家定价函数集合为 $overline(cal(P))$ 表示所有只能在 $N_D$ 跳变，定义域在 $[N]$ 且取值只能在 $W$ 的单调不减 m-step 函数。
 
 == 买家类型存在一个概率分布时的卖家定价算法
 
@@ -804,12 +806,9 @@ $Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
 
 同时，算法中也近似的算出来买家种类的分布。
 
-算法需要输入来购买的轮数 T，之前选出来的卖家比较好的定价函数集合 $overline(cal(P))$。买方会选择一个购买商品的数量，使得此时自己获得最大的利润，即买方的估值函数减去卖方估值函数
+算法需要输入来购买的轮数 T，之前选出来的卖家比较好的定价函数集合 $overline(cal(P))$。买方会选择一个购买商品的数量，使得此时自己获得最大的利润，即买方的估值函数减去卖方估值函数。
 
-
-第一轮先免费卖一次数据，显然这个类型为 $i_1$ 的买家会买走所有 N 个数据点。
-
-2 到 T 轮中的第 t 轮分别进行以下步骤：
+第一轮先免费卖一次数据，显然这个类型为 $i_1$ 的买家会买走所有 N 个数据点。2 到 $T$ 轮中的第 $t$ 轮分别进行以下步骤：
 
 ==== 用 UCB 法计算 $overline(cal(P))$ 中每个卖家定价函数 $p$ 的最大期望收益 $"UCB"_(hat("rev")_(t-1)) (p)$
 
@@ -827,7 +826,7 @@ $Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
 
 ==== 选出本轮采用的卖家定价函数 $p$
 
-选出上一步算出的“最大期望收益” $"UCB"_(hat("rev")_(t-1)) (p)$ 最大的那个 $p$，这就是本轮卖家的定价 $p_t$
+选出上一步算出的“最大期望收益” $"UCB"_(hat("rev")_(t-1)) (p)$ 最大的那个 $p$，这就是本轮卖家的定价 $p_t$。
 
 ==== 完成买卖
 
@@ -838,7 +837,7 @@ $Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
 
 == 买家类型被对手提前确定时的卖家定价算法
 
-显然，作为买家方，我们可以针对卖家的定价方法针对性地做局，安排相应类型的买家使得卖家挣不到钱。例如可以先压价再买，或者先抬价再不买。这就需要卖家用一些方法来解决
+显然，作为买家方，我们可以针对卖家的定价方法针对性地做局，安排相应类型的买家使得卖家挣不到钱。例如可以先压价再买，或者先抬价再不买。这就需要卖家用一些方法来解决。
 
 在实际的设定中，买家的类型是在买卖之前由一个对手提前确定的。它可以针对卖家做局，但是不会根据卖家之后买卖时对定价函数的调整来动态在线做局。
 
@@ -849,10 +848,7 @@ $Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
 
 === 算法 4：针对会提前做局但是不会动态调整的买家如何选出挣钱最多的定价
 
-本算法的思路依然是计算出每个卖家的定价函数可能的收益，并选取最大收益的那个作为定价函数。
-
-但是计算定价函数的收益不仅来源于历史数据，还来源于估计。
-
+本算法的思路依然是计算出每个卖家的定价函数可能的收益，并选取最大收益的那个作为定价函数。但是计算定价函数的收益不仅来源于历史数据，还来源于估计。
 
 输入总买卖次数 $T$，我们选出的卖家定价函数 $overline(cal(P))$，买家类型分布 $P_i$，控制随机扰动的强度的参数 $theta$。
 
@@ -860,7 +856,7 @@ $Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
 
 我们需要一个指标来衡量每个定价函数的收益，因为收益越高代表至少我们觉得它越好，在算法中，我们使用符号 $r_tau(p)$ 表示第 $tau$ 轮我们通过实际买卖或者估计算出的卖家定价函数 $p$ 的本轮收益。每一轮收益加起来就是这个定价函数的收益了。
 
-接下来执行 T 轮以下步骤，不妨令本文为第 t 轮：
+接下来执行 $T$ 轮以下步骤，不妨令本文为第 $t$ 轮：
 
 ==== 选择累计收益最高的卖家定价
 
@@ -868,155 +864,255 @@ $Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
 
 ==== 完成本轮的收益估计
 
-下面我们将分知道本轮来了哪个买家或者不知道，来计算这个衡量每个定价函数的收益的指标 $r_t(p)$
+下面我们将分知道本轮来了哪个买家或者不知道，来计算这个衡量每个定价函数的收益的指标 $r_t(p)$。
 
 如果这一轮买家买数据了，那么我们可以知道买家类型 $i_t$，买家内心估值 $v_(i_t)$，进而对我们选出的 $overline(cal(P))$ 中的每一个函数 $p$，都可以算出这个买家会买的数据量 $n_(i_t,p)$，进而计算出如果本轮卖家选择这个定价函数，可以获得收益 $r_t (p) = p(n_(i_t,p)) $。
 
-如果这轮买家没有买数据，那么我们自然不知道这个买家的类型，我们只能估计可能带来的收益。因为所有买家的估值曲线 $v_i$ 都是已知信息，所以我们可以算出所有本轮因为定价 $p_t$ 不会购买数据的买家的类型集合 $S_t^c$，然后对于其中的任何一个类型 $i$，算出其对每一个定价函数 $p$，会买 $n_(i,p)$ 个数据，产生 $p(n_(i,p))$ 的收益，本轮函数 $p$ 的估计收益 $r_t (p)$ 即为这些“可能存在但实际上没有”的收益之和。即 $r_t (p) = sum_(i in S_t^c) p(n_(i,p))$
+如果这轮买家没有买数据，那么我们自然不知道这个买家的类型，我们只能估计可能带来的收益。因为所有买家的估值曲线 $v_i$ 都是已知信息，所以我们可以算出所有本轮因为定价 $p_t$ 不会购买数据的买家的类型集合 $S_t^c$，然后对于其中的任何一个类型 $i$，算出其对每一个定价函数 $p$，会买 $n_(i,p)$ 个数据，产生 $p(n_(i,p))$ 的收益，本轮函数 $p$ 的估计收益 $r_t (p)$ 即为这些“可能存在但实际上没有”的收益之和。即 $r_t (p) = sum_(i in S_t^c) p(n_(i,p))$。
 
 以上这两步需要对所有的卖家定价函数 $p in overline(cal(P))$ 进行。
-
 
 
 
 = Experiments and Results
 
 
-== Algorithm Implementation
+== 算法实现
+
 算法实现相对来说难度不大，只需根据伪代码进行实现即可.
 
+=== m-step 定价函数生成
+
+我们使用 `seller.py` 中的 `SellerCurveGenerator` 类来生成满足给定条件的所有 m-step 定价函数. 在我们的实现中，m-step 定价曲线共有两种类型：
+
+- `SellerCurveType.SMOOTH`：生成满足平滑条件的 m-step 定价函数
+
+- `SellerCurveType.DIMINISHING`：生成满足递减回报条件的 m-step 定价函数
+
+
 定价空间的离散化（算法1）：
-#codex("def make_W(m, epsilon=0.1, begin=1):
-    Z = [epsilon * (1 + epsilon) ** i for i in range(math.ceil(math.log(1 / epsilon, 1 + epsilon)) + 1)]
+#codex("def make_W(self, m, epsilon=0.1, begin=1):
+    \"\"\"
+        m: 买家种类
+        epsilon: 误差范围
+    \"\"\"
+
+    # 构造等比数列 Z_i
+    Z = [epsilon]
+    while Z[-1] * (1 + epsilon) <= 1:
+        Z.append(Z[-1] * (1 + epsilon))
+
+    # 对 Z 的相邻元素作线性插值得到 W
     W = []
     for i in range(begin, len(Z)):
         for k in range(1, math.ceil((2+epsilon) * m) + 1):
             W.append(Z[i - 1] + Z[i - 1] * epsilon / m * k)
-    return sorted(W)")
+    return sorted(W)",
+    lang: "python"
+)
 
-数据空间离散化. 根据引理我们只需考虑所有的 "m-step" 价格曲线，因此我们可以用 $m$ 个变化点的信息来表示价格曲线.下面依次为平滑条件下和递减回报条件下的离散化实现.
-#codex("def discretize_smooth(N, m, epsilon, L):
-    W = make_W(m, epsilon)
+根据引理我们只需考虑所有的 "m-step" 价格曲线，因此我们可以用 $m$ 个变化点的信息来表示价格曲线。下面依次为平滑条件下和递减回报条件下的离散化实现：
+
+#codex("def discretize_smooth(self, N, m, epsilon, L):
+    \"\"\"
+        N: 数据总量
+        m: 买家种类
+        epsilon: 误差范围
+        L: 平滑系数
+    \"\"\"
+    # W: 可选的价格集合
+    W = self.make_W(m, epsilon)
+
+    # delta: 离散化间隔
     delta = math.floor((epsilon * N) / (m * L))
     if delta == 0:
         delta = 1
+
+    # N_S: 可取的跳跃点集合
     N_S = [delta * k for k in range(1, math.ceil(N / delta) + 1)]
+
+    # 从 N_S 中任取 m 个元素作为跳跃点可以构造出一条 m-step 定价曲线
+    # P: 所有满足条件的 m-step 定价曲线的集合
     N_combs  = list(itertools.combinations(N_S, m))
     W_combs = list(itertools.combinations(W, m))
     P = []
     for n_comb, w_comb in itertools.product(N_combs, W_combs):
-        P.append([np.array(list(n_comb)), np.array(list(w_comb))])
-    return P")
+        P.append(SellerCurve(N, m, list(n_comb), list(w_comb)))
+    return P",
+    lang: "python"
+)
 
 
-#codex("def discretize_diminishing(N, m, epsilon, J):
-    W = make_W(m, epsilon, begin = 2)
+#codex("def discretize_diminishing(self, N, m, epsilon, J):
+    \"\"\"
+        N: 数据总量
+        m: 买家种类
+        epsilon: 误差范围
+        J: 边际收益递减常数
+    \"\"\"
+    # W: 可选的价格集合
+    W = self.make_W(m, epsilon, begin = 2)
     Y = [(2 * J * m) / (epsilon ** 2) * (1 + epsilon ** 2) ** i for i in range(math.ceil(math.log(N * epsilon ** 2 / (2 * J * m), 1 + epsilon ** 2)) + 1)]
+
+    # N_D: 可取的跳跃点集合
     N_D = [k for k in range(1, math.ceil((2 * J * m) / (epsilon ** 2)) + 1)]
+    print(len(Y))
+
     for i in range(len(Y) - 1):
         for k in range(math.floor(2 * J * m)):
             q_i = math.floor(Y[i] + Y[i] * (epsilon ** 2) / (2 * J * m) * k)
+            print(i, k)
             if q_i not in N_D:
                 N_D.append(q_i)
+    
+    # 从 N_D 中任取 m 个元素作为跳跃点可以构造出一条 m-step 定价曲线
+    # P: 所有满足条件的 m-step 定价曲线的集合
     N_combs = list(itertools.combinations(N_D, m))
     W_combs = list(itertools.combinations(W, m))
     P = []
     for n_comb, w_comb in itertools.product(N_combs, W_combs):
-        P.append([np.array(list(n_comb)), np.array(list(w_comb))])
-    return P")
+        P.append(SellerCurve(N, m, list(n_comb), list(w_comb)))
+    return P",
+    lang: "python"
+)
 
-求解算法的实现.
-随机（非对抗）情形：
-#codex("def random_online_pricing(m, types, Time, Value, Price_curves):
-    T_bound = np.ones(m)
-    T_fact = np.zeros(m)
-    T_fact[types[0]] = 1
+=== 买家行为的描述
+
+我们使用 `buyer.py` 中的 `Buyer` 类来描述买家的行为，每个 `Buyer` 对象对应了一类买家。在 `Buyer` 中我们会存储买家的效用曲线 $v_i (n)$。该类提供的最重要的方法是 `optimal_purchase` 方法，该方法用于计算给定定价曲线时，该类买家会选择的最优购买数量以及获得的净效用。
+
+#codex("def optimal_purchase(self, P):
+    \"\"\"
+        P: seller curves ,   shape: [m]
+        V: value function,   shape: [N+1]
+    \"\"\"
+    max_rev, val= 0, 0
+    for i in range(1, len(self.values)):
+        price = P.get_price(i)
+        rev = self.values[i] - price
+        if rev > max_rev:
+            max_rev = rev
+            val = i
+
+    return max_rev, val",
+    lang: "python"
+)
+
+
+=== 求解算法的实现
+
+我们使用 `game.py` 中的 `Game` 类来描述整个博弈的过程。该类中定义了博弈的初始参数 $N$, $m$ 等，生成满足要求的定价曲线集合，并管理买卖双方的行为逻辑。
+
+买方的行为逻辑实现在下文数据生成部分介绍，下面是卖方的行为逻辑实现，即求解定价的算法：
+
+- 随机（非对抗）情形：
+
+#codex("def random_online_pricing(self, Time):
+    gen = self.gen
+    T_bound = np.ones(self.m)
+    T_fact = np.zeros(self.m)
+    idx, _ = gen.choose_buyer_type(BuyerGeneratorType.RANDOM)
+    T_fact[idx] = 1
+
     sum = 0
-    records = [0]
+    records = []
+
     for time in range(1, Time):
-        q = np.zeros(m)
-        for idx in range(m):
-            q[idx] = T_fact[idx] / T_bound[idx] + math.sqrt(math.log(Time) / T_bound[idx])
-        idx = types[time]
-        max_rev = 0
-        optimal_p = None
-        for p in Price_curves:
-            rev = 0
-            for k in range(m):
-                _, val = optimal_purchase(p, Value[k])
-                stage = np.searchsorted(p[0], val, side=\"left\")
-                if stage >= len(p[0]):
-                    stage = len(p[0]) - 1
-                if val > 0:
-                    rev += p[1][stage] * q[k]
-            if rev > max_rev:
-                max_rev = rev
-                optimal_p = p
-        a = optimal_purchase(optimal_p, Value[0])
-        a = optimal_purchase(optimal_p, Value[1])
+        q = np.zeros(self.m)
+        for idx in range(self.m):
+            q[idx] = T_fact[idx] / T_bound[idx] +
+                     math.sqrt(math.log(Time) / T_bound[idx])
+        
+        idx, buyer = gen.choose_buyer_type(BuyerGeneratorType.RANDOM)
+        max_rev, optimal_p = self.seller.random_online_opt_curve(
+            self.m, buyer, self.P, q
+        )
+
         sum += max_rev
         records.append(optimal_p)
-        for k in range(m):
-            _, val = optimal_purchase(optimal_p, Value[k])
+        for k in range(self.m):
+            _, val = buyer.optimal_purchase(optimal_p)
             if val > 0:
                 T_bound[k] += 1
                 if k == idx:
                     T_fact[k] += 1
-        
-    return sum, records")
+    
+    return sum, records, gen.history",
+    lang: "python"
+)
 
-对抗情形：
-#codex("def adversarial_online_pricing(m, types, Time, Value, Price_curves, theta=10):
-    theta_p = [np.random.exponential(scale=1/theta) for _ in Price_curves]
-    r_sum = np.zeros(len(Price_curves))
+- 对抗情形：
+
+#codex("def adversarial_online_pricing(self, Time, theta=10):
+    gen = self.gen
+
+    theta_p = [np.random.exponential(scale=1/theta) for _ in self.P]
+    r_sum = np.zeros(len(self.P))
     sum = 0
     records = []
     for time in range(Time):
-        optimal_p = Price_curves[np.argmax(r_sum + theta_p)]
-        idx = types[time]
-        _, val = optimal_purchase(optimal_p, Value[idx])
+        optimal_p = self.P[np.argmax(r_sum + theta_p)]
+        idx, buyer = gen.choose_buyer_type(BuyerGeneratorType.ADVERSARIAL,
+                                           optimal_p)
+        _, val = buyer.optimal_purchase(optimal_p)
 
-        for k, p in enumerate(Price_curves):
-            stage = 0
+        for k, p in enumerate(self.P):
             if val > 0:
-                # print(p, Value[idx])
-                stage = np.searchsorted(p[0], optimal_purchase(p, Value[idx])[1], side=\"left\")
-                if stage >= len(p[0]):
-                    stage = len(p[0]) - 1
-                r_sum[k] += p[1][stage]
+                _, _val = buyer.optimal_purchase(p)
+                r_sum[k] += p.get_price(_val)
             else:
-                for j in range(m):
-                    if optimal_purchase(p, Value[j])[1] == 0:
-                        stage = np.searchsorted(p[0], optimal_purchase(p, Value[j])[1], side=\"left\")
-                        if stage >= len(p[0]):
-                            stage = len(p[0]) - 1
-                        r_sum[k] += p[1][stage]  
-        stage = np.searchsorted(optimal_p[0], val, side=\"left\")
-        if stage >= len(optimal_p[0]):
-            stage = len(optimal_p[0]) - 1
-        sum += optimal_p[1][stage]
+                for j in range(self.m):
+                    _, _val = gen.get_buyer(j).optimal_purchase(p)
+                    if _val == 0:
+                        r_sum[k] += p.get_price(_val)
+        
+        sum += optimal_p.get_price(val)
         records.append(optimal_p)
-    return sum, records")
-
-其中 optimal_purchase 函数用于计算最优购买.
-
-#codex("def optimal_purchase(P, V):
-    max_rev, val= 0, 0
-    for i in range(1, len(V)):
-        stage = np.searchsorted(P[0], i, side=\"left\")
-        if stage >= len(P[0]):
-            stage = len(P[0]) - 1
-        rev = V[i] - P[1][stage]
-        if rev > max_rev:
-            max_rev = rev
-            val = i
-    return max_rev, val")
-== Test Case Generation
+    return sum, records, gen.history",
+    lang: "python"
+)
 
 
-== Results and Analysis
+== 测试用例生成
 
+测试用例的生成在 `buyer.py` 的 `BuyerListGenerator` 类中实现。该类会在初始化时根据 $N$ 和 $m$ 生成 $m$ 类买家，存储在 `buyer_types` 列表中，并提供了 `choose_buyer_type` 方法用于在博弈中随机选择一种买家类型。
 
+根据博弈类型的不同，我们的 `choose_buyer_type` 方法有两种实现：
+
+- 随机（非对抗）情形：在初始化阶段随机生成一个概率分布，调用 `choose_buyer_type` 方法时，根据概率分布选择一种买家类型。
+
+- 对抗情形：调用 `choose_buyer_type` 方法时，传入当前卖家给出的最优定价曲线，根据该曲线选择一种买家类型，使得该类买家能获得的最大净效用最大，即：
+
+$
+    "buyer_type"(t) =  op("argmax", limits: #true)_i {max_(n in [N]) (v_i (n) - p_t (n))}
+$
+
+#codex("def choose_buyer_type(self, 
+                      gen_type: BuyerGeneratorType = BuyerGeneratorType.RANDOM,
+                      optimal_p = None):
+    
+    buyer_type = 0
+    if gen_type == BuyerGeneratorType.RANDOM:
+        buyer_type = np.random.choice(range(self.m), p=self.prob)
+    elif gen_type == BuyerGeneratorType.ADVERSARIAL:
+        max_rev, buyer_type = 0, 0
+        for i in range(self.m):
+            rev, _ = self.buyer_types[i].optimal_purchase(optimal_p)
+            if rev > max_rev:
+                max_rev = rev
+                buyer_type = i
+    else:
+        raise ValueError(\"Invalid generator type\")
+
+    self.history.append(buyer_type)
+    return buyer_type,self.buyer_types[buyer_type]",
+    lang: "python"
+)
+
+== 测试结果
+
+=== 正确性测试
+
+=== 卖家收入
 
 = Conclusion
 
