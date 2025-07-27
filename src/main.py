@@ -9,6 +9,9 @@ import click
 @click.option("-s", default=0, help="Type of seller curve (0: smooth, 1: diminishing)")
 @click.option("-p", default=0, help="Method of buyer generation (0: random, 1: adversarial)")
 def main(n, m, t, s, p):
+    run_game(n, m, t, s, p)
+
+def run_game(n, m, t, s, p):
     if s == 0:
         curve_type = SellerCurveType.SMOOTH
     elif s == 1:
@@ -25,10 +28,13 @@ def main(n, m, t, s, p):
     else:
         raise ValueError("Invalid buyer generation method")
 
+    print(f"N = {n}, m = {m}, t = {t}, s = {s}, p = {p}")
     print(f"sum: {sum}")
     print(f"regret: {regret}")
     for i, p in enumerate(records):
         print(f"buyer: {buyer_history[i]}, optimal_p: {p}")
+    
+    return regret
 
 if __name__ == "__main__":
     main()
