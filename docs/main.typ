@@ -74,7 +74,7 @@
 
 - $p^"OPT"$：最优定价曲线
 
-- $"rev"(p^"OPT")$：按最优定价卖一件商品期望收益
+- $"OPT" = "rev"(p^"OPT")$：按最优定价卖一件商品期望收益
 
 
 
@@ -195,7 +195,7 @@ $
 m-step ：一个函数 $f$ 对于 $[N]$ 到 $[0,1]$ 的单调不减函数，满足至多有 $m$ 个点 $n in {0,1,2,dots,N-1}, f(n+1)-f(n)>0$。
 
 
-#axiom(name: strong("Lemma 1"))[
+#lemma(name: strong("Lemma 1"))[
     可以用简单的 m-step 函数代替所有的卖家估值函数。具体地，如果有 $m$ 种买家，对于任何一个卖家的非递减定价函数，都有 m-step 函数收益不低于这个定价函数。
 ]
 
@@ -259,7 +259,7 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
 #proof[
     我们先提出并证明三个引理：
 
-    1. #axiom(name: strong("Lemma A.1"))[
+    1. #lemma(name: strong("Lemma A.1"))[
             $forall epsilon$，存在定价函数 $tilde(p): [N] -> [epsilon, 1]$，使得 $"rev"( tilde(p)) >= "OPT" - epsilon$。
         ]
 
@@ -267,7 +267,7 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
 
         如果买家购买的数据量价格不变，那么买家带来的收益不变，但是如果买家购买的数据量价格涨价，那么即使所有买家买的数据都涨价导致买家都不买了，那么损失的期望也是 $epsilon times 1 = epsilon$，所以卖一次的期望收益最多减少 $epsilon$，即引理成立。
 
-    2. #axiom(name: strong("Lemma A.2"))[
+    2. #lemma(name: strong("Lemma A.2"))[
             在使用算法 1 从无穷个定价函数中选出的 $overline(cal(P))$ 中，有一函数离刚刚构造出的 $tilde(p)$ 足够近。即 $exists p in overline(cal(P))$，使得 $"rev"(p) >= "rev"(tilde(p)) /(1+epsilon)$。
         ]
 
@@ -279,7 +279,7 @@ m-step 函数不只有我们构造出的 $overline(p)$ ，还可以有其他的 
 
         那么买家会不会买更少的数据导致更小的卖家收益呢？答案是不会。因为根据 $Z$ 的构造方法，$Z_i$ 是等比数列，这导致 $Z_i$ 越大越稀疏，而 $W_i$ 是在 $Z_i$ 的基础上插值的，因而 $W_i$ 越大也会越来越稀疏。而数据卖的越多价格越贵，因此价格越高降价越多，自然买家只会不改变购买数量或者买更多的数量。这样要么收益增加，要么收益大于 $"rev"(tilde(p)) /(1+epsilon)$。
     
-    3. #axiom(name: strong("Lemma A.3"))[
+    3. #lemma(name: strong("Lemma A.3"))[
             从无穷个卖家定价函数中用算法 1 选出的数量够少。只要满足 $n>m$ 的前提，就有
             
             $
@@ -578,7 +578,7 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 表示在算法逐渐逼近可以选择的最优 $p$ 的过程中，不会造成很大的遗憾
 
-#axiom(name: strong("Lemma C.1"))[
+#lemma(name: strong("Lemma C.1"))[
 这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t)) ] <= tilde(O) (m sqrt(T))$
 ]
 
@@ -651,7 +651,7 @@ $max_(p in cal(P)) sum_(t=1)^T r(i_t,p) - max_(p in overline(cal(P))) sum_(t=1)^
 
 接下来我们只需要研究在我们选出的 $overline(cal(P))$ 集合中，我们逼近可以选择的最优函数的过程造成了什么损失了。以下的引理 B.1 证明证明了我们算法过程中的期望遗憾不是很大。
 
-#axiom(name: strong("Theorem B.1"))[
+#lemma(name: strong("Theorem B.1"))[
 $    
 bb(E)[max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)] in cal(O) (m sqrt(T log(|overline(cal(P))|)))
 $
@@ -879,7 +879,7 @@ $
 
 == 算法实现
 
-算法实现相对来说难度不大，只需根据伪代码进行实现即可.
+算法实现相对来说难度不大，只需根据伪代码进行实现即可。
 
 === m-step 定价函数生成
 
@@ -1086,33 +1086,51 @@ $
     "buyer_type"(t) =  op("argmax", limits: #true)_i {max_(n in [N]) (v_i (n) - p_t (n))}
 $
 
-#codex("def choose_buyer_type(self, 
-                      gen_type: BuyerGeneratorType = BuyerGeneratorType.RANDOM,
-                      optimal_p = None):
-    
-    buyer_type = 0
-    if gen_type == BuyerGeneratorType.RANDOM:
-        buyer_type = np.random.choice(range(self.m), p=self.prob)
-    elif gen_type == BuyerGeneratorType.ADVERSARIAL:
-        max_rev, buyer_type = 0, 0
-        for i in range(self.m):
-            rev, _ = self.buyer_types[i].optimal_purchase(optimal_p)
-            if rev > max_rev:
-                max_rev = rev
-                buyer_type = i
-    else:
-        raise ValueError(\"Invalid generator type\")
+#codex("class BuyerListGenerator:
+    def __init__(self, N: int, m: int):
+        self.N = N
+        self.m = m
+        self.buyer_types = [Buyer(N) for _ in range(m)]
+        self.history = []
 
-    self.history.append(buyer_type)
-    return buyer_type,self.buyer_types[buyer_type]",
+        self.prob = np.random.rand(m)
+        self.prob = self.prob / np.sum(self.prob)
+    
+    def get_buyer(self, i: int):
+        return self.buyer_types[i]
+        
+    def choose_buyer_type(self,
+            gen_type: BuyerGeneratorType = BuyerGeneratorType.RANDOM,
+            optimal_p = None):
+        buyer_type = 0
+        if gen_type == BuyerGeneratorType.RANDOM:
+            buyer_type = np.random.choice(range(self.m), p=self.prob)
+        elif gen_type == BuyerGeneratorType.ADVERSARIAL:
+            max_rev, buyer_type = 0, 0
+            for i in range(self.m):
+                rev, _ = self.buyer_types[i].optimal_purchase(optimal_p)
+                if rev > max_rev:
+                    max_rev = rev
+                    buyer_type = i
+        else:
+            raise ValueError(\"Invalid generator type\")
+
+        self.history.append(buyer_type)
+        return buyer_type, self.buyer_types[buyer_type]",
     lang: "python"
 )
 
 == 测试结果
 
-=== 正确性测试
+我们主要对卖家的累计收益和遗憾值这两个指标进行测试：
 
-=== 卖家收入
+=== 累计收益曲线
+
+
+
+=== 遗憾值
+
+
 
 = Conclusion
 

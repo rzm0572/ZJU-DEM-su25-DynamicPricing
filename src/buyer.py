@@ -68,7 +68,15 @@ class BuyerListGenerator:
             raise ValueError("Invalid generator type")
 
         self.history.append(buyer_type)
-        return buyer_type,self.buyer_types[buyer_type]
+        return buyer_type, self.buyer_types[buyer_type]
+    
+    def expect_rev(self, optimal_p):
+        rev = 0
+        for i in range(self.m):
+            _, val = self.buyer_types[i].optimal_purchase(optimal_p)
+            price = optimal_p.get_price(val)
+            rev += price * self.prob[i]
+        return rev
 
 
 if __name__ == '__main__':

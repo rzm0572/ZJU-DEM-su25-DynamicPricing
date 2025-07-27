@@ -749,7 +749,7 @@
   },
   color: rgb(120, 120, 120),
 )
-#let axiom(it, name: none) = blockx(
+#let lemma(it, name: none) = blockx(
   it,
   name: if(name != none) {
     name

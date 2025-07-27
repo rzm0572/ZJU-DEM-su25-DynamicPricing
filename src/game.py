@@ -49,7 +49,8 @@ class Game:
                     if k == idx:
                         T_fact[k] += 1
         
-        return sum, records, gen.history
+        regret = self.random_online_regret_calculation(records)
+        return sum, regret, records, gen.history
     
     def adversarial_online_pricing(self, Time, theta=10):
         gen = self.gen
@@ -72,18 +73,27 @@ class Game:
                         _, _val = gen.get_buyer(j).optimal_purchase(p)
                         if _val == 0:
                             r_sum[k] += p.get_price(_val)
-            
+
             sum += optimal_p.get_price(val)
             records.append(optimal_p)
-        return sum, records, gen.history
+
+        regret = np.max(r_sum) - sum
+
+        return sum, regret, records, gen.history
+    
+    def random_online_regret_calculation(self, records):
+        # for i, p in enumerate(records):
+        #     buyer = buyer_history[i]
+        return self.gen.expect_rev(records[-1]) * len(records)
 
 
 if __name__ == '__main__':
     game = Game(5, 2)
 
-    sum, records, buyer_history = game.random_online_pricing(10)
+    sum, regret, records, buyer_history = game.random_online_pricing(10)
     # sum, records, buyer_history = game.adversarial_online_pricing(10)
-    print(sum)
+    print(f"sum: {sum}")
+    print(f"regret: {regret}")
     for i, p in enumerate(records):
         print(f"buyer: {buyer_history[i]}, optimal_p: {p}")
 
