@@ -610,7 +610,7 @@ $
 即概率估计误差不超过 $sqrt(frac(log(T),T_(i,t)))$，符合 $q_i <= hat(q)_(i,t) <= q_i + 2 sqrt(frac(log(T),T_(i,t)))$ 的 $i$ 集合。
 
 
-#axiom(name: strong("Lemma C.3"))[
+#lemma(name: strong("Lemma C.3"))[
 最优曲线 $p^*$ 与算法算出的曲线 $p_t$ 差距小于 $2 sum_(i in S_t) sqrt(log(T)/T_(i,t))$
 ]
 
