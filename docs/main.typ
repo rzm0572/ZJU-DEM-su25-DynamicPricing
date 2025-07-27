@@ -560,15 +560,19 @@ $W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon)
 
 其中 $i_t$ 是从买家的分布中按照概率随机抽取的。
 
-=== 定理 4.1：算法的期望遗憾足够小
+=== 定理 4.1：算法 3 造成的期望遗憾足够小
+
+#theorem(name: strong("Theorem 4.1"))[
+    定理的内容是：只要计算 $overline(cal(P))$ 用的误差上界 $epsilon in cal(O) (1/ sqrt(T))$
+那么使用算法3造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) $
+]
+
+#proof[
 
 我们只要将 $overline(cal(P))$ 取得误差足够小，这是我们在三个选择算法中均保证过的，因为我们可以根据输入的最大误差来用不同的方法选取函数，那么可以保证用算法 3 造成的遗憾值足够小。
 
-定理的内容是：只要计算 $overline(cal(P))$ 用的误差上界 $epsilon in cal(O) (1/ sqrt(T))$
-那么使用算法3造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) $
 
-
-==== 步骤 1：切分遗憾
+1. 将遗憾值切分
 
 将遗憾值 $R_T$ 从最优值-实际值改写为（最优值-可能达到的最优值）+（可能达到的最优值-实际值），即 $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p) + T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))$
 
@@ -578,39 +582,21 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 接下来我们只需要研究在我们选出的 $overline(cal(P))$ 集合中，我们逼近可以选择的最优函数的过程造成了什么损失了。
 
-==== 步骤二：引理 C.1：逼近最优选择的过程中不会造成太大误差
+2. 引理 C.1：算法逼近最优选择的过程中不会造成太大误差
 
-这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))  <= tilde(O) (m sqrt(T))$
+表示在算法逐渐逼近可以选择的最优 $p$ 的过程中，不会造成很大的遗憾
 
-
-== 买家类型被对手提前确定时的卖家定价算法
-
-显然，作为买家方，我们可以针对卖家的定价方法针对性地做局，安排相应类型的买家使得卖家挣不到钱。例如可以先压价在买，或者先抬价再不买。这就需要卖家用一些方法来解决。
-
-
-我们只要将 $overline(cal(P))$ 取得误差足够小，这是我们在三个选择算法中均保证过的，因为我们可以根据输入的最大误差来用不同的方法选取函数，那么可以保证用算法 3 造成的遗憾值足够小。
-
-定理的内容是：只要计算 $overline(cal(P))$ 用的误差上界 $epsilon in cal(O) (1/ sqrt(T))$
-那么使用算法3造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) $
-
-
-==== 步骤 1：切分遗憾
-
-将遗憾值 $R_T$ 从最优值-实际值改写为（最优值-可能达到的最优值）+（可能达到的最优值-实际值），即 $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p) + T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))$
-
-$T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由于我们从所有定价函数中选了一部分，导致可能实际上达不到最优，实际的最优与我们的最优差了多少呢？
-
-我们在选择函数的算法中那一部分已经知道了这个差距范围是 $T dot cal(O)(epsilon) = T dot cal(O) (frac(1,sqrt(T))) = cal(O) (sqrt(T))$
-
-接下来我们只需要研究在我们选出的 $overline(cal(P))$ 集合中，我们逼近可以选择的最优函数的过程造成了什么损失了。
-
-==== 步骤二：引理 C.1：逼近最优选择的过程中不会造成太大误差
-
-这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))  <= tilde(O) (m sqrt(T))$
+#axiom(name: strong("Lemma C.1"))[
+这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t)) ] <= tilde(O) (m sqrt(T))$
+]
 
 
 
-== 买家类型被对手提前确定时的卖家定价算法
+
+]
+
+
+== 对抗性场景下的算法
 
 
 显然，作为买家方，我们可以针对卖家的定价方法针对性地做局，安排相应类型的买家使得卖家挣不到钱。例如可以先压价再买，或者先抬价再不买。这就需要卖家用一些方法来解决
@@ -636,11 +622,11 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 我们需要一个指标来衡量每个定价函数的收益，因为收益越高代表至少我们觉得它越好，在算法中，我们使用符号 $r_tau(p)$ 表示第 $tau$ 轮我们通过实际买卖或者估计算出的卖家定价函数 $p$ 的本轮收益。每一轮收益加起来就是这个定价函数的收益了。
 
-接下来执行 T 轮以下步骤，不妨令本文为第 t 轮：
+接下来执行 T 轮以下步骤，不妨令本轮次为第 t 轮：
 
 ==== 选择累计收益最高的卖家定价
 
-我们将每一轮的收益 $r_tau(p)$ 加起来，再加上之前指定的随机扰动 $theta_p$，得到估计的收益 $sum_(tau=1)^(T-1)r_tau(p) + theta_p$。选出结果最大的那个 $p$ 然后用这个 $p$ 这一轮买卖卖数据。
+我们将每一轮的收益 $r_tau(p)$ 加起来，再加上之前指定的随机扰动 $theta_p$，得到估计的收益 $sum_(tau=1)^(T-1)r_tau(p) + theta_p$。选出结果最大的那个 $p$ 然后用这个 $p$ 在这一轮买卖卖数据。
 
 ==== 完成本轮的收益估计
 
@@ -652,7 +638,18 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 以上这两步需要对所有的卖家定价函数 $p in overline(cal(P))$ 进行。
 
-=== 定理 5.1：算法 4 给出了足够优秀的的卖家定价函数
+=== 定理 5.1：算法 4 造成的遗憾足够小
+
+#theorem(name: strong("Theorem 5.1"))[
+
+只要按照 $epsilon = cal(O) (1/ sqrt(T))$ 来计算 $overline(cal(P))$ ，那么使用算法 4 造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m^2  theta T + theta^(-1)(1+log(|overline(cal(P))|))) $
+
+只要设定 $theta = sqrt((1+log(|overline(cal(P))|))/(m^2 T))$，有 $bb(E) [ R_T ] in cal(O) ( m sqrt(T log(|overline(cal(P))|)) )$
+]
+
+#proof[
+
+]
 
 
 = Algorithm Specification
@@ -857,8 +854,134 @@ $Q = union_{i=1}^ceil(log_(1+epsilon^2)frac(N epsilon^2,2 J m)) Q_i$
 
 
 == Algorithm Implementation
+算法实现相对来说难度不大，只需根据伪代码进行实现即可.
+
+定价空间的离散化（算法1）：
+#codex("def make_W(m, epsilon=0.1, begin=1):
+    Z = [epsilon * (1 + epsilon) ** i for i in range(math.ceil(math.log(1 / epsilon, 1 + epsilon)) + 1)]
+    W = []
+    for i in range(begin, len(Z)):
+        for k in range(1, math.ceil((2+epsilon) * m) + 1):
+            W.append(Z[i - 1] + Z[i - 1] * epsilon / m * k)
+    return sorted(W)")
+
+数据空间离散化. 根据引理我们只需考虑所有的 "m-step" 价格曲线，因此我们可以用 $m$ 个变化点的信息来表示价格曲线.下面依次为平滑条件下和递减回报条件下的离散化实现.
+#codex("def discretize_smooth(N, m, epsilon, L):
+    W = make_W(m, epsilon)
+    delta = math.floor((epsilon * N) / (m * L))
+    if delta == 0:
+        delta = 1
+    N_S = [delta * k for k in range(1, math.ceil(N / delta) + 1)]
+    N_combs  = list(itertools.combinations(N_S, m))
+    W_combs = list(itertools.combinations(W, m))
+    P = []
+    for n_comb, w_comb in itertools.product(N_combs, W_combs):
+        P.append([np.array(list(n_comb)), np.array(list(w_comb))])
+    return P")
 
 
+#codex("def discretize_diminishing(N, m, epsilon, J):
+    W = make_W(m, epsilon, begin = 2)
+    Y = [(2 * J * m) / (epsilon ** 2) * (1 + epsilon ** 2) ** i for i in range(math.ceil(math.log(N * epsilon ** 2 / (2 * J * m), 1 + epsilon ** 2)) + 1)]
+    N_D = [k for k in range(1, math.ceil((2 * J * m) / (epsilon ** 2)) + 1)]
+    for i in range(len(Y) - 1):
+        for k in range(math.floor(2 * J * m)):
+            q_i = math.floor(Y[i] + Y[i] * (epsilon ** 2) / (2 * J * m) * k)
+            if q_i not in N_D:
+                N_D.append(q_i)
+    N_combs = list(itertools.combinations(N_D, m))
+    W_combs = list(itertools.combinations(W, m))
+    P = []
+    for n_comb, w_comb in itertools.product(N_combs, W_combs):
+        P.append([np.array(list(n_comb)), np.array(list(w_comb))])
+    return P")
+
+求解算法的实现.
+随机（非对抗）情形：
+#codex("def random_online_pricing(m, types, Time, Value, Price_curves):
+    T_bound = np.ones(m)
+    T_fact = np.zeros(m)
+    T_fact[types[0]] = 1
+    sum = 0
+    records = [0]
+    for time in range(1, Time):
+        q = np.zeros(m)
+        for idx in range(m):
+            q[idx] = T_fact[idx] / T_bound[idx] + math.sqrt(math.log(Time) / T_bound[idx])
+        idx = types[time]
+        max_rev = 0
+        optimal_p = None
+        for p in Price_curves:
+            rev = 0
+            for k in range(m):
+                _, val = optimal_purchase(p, Value[k])
+                stage = np.searchsorted(p[0], val, side=\"left\")
+                if stage >= len(p[0]):
+                    stage = len(p[0]) - 1
+                if val > 0:
+                    rev += p[1][stage] * q[k]
+            if rev > max_rev:
+                max_rev = rev
+                optimal_p = p
+        a = optimal_purchase(optimal_p, Value[0])
+        a = optimal_purchase(optimal_p, Value[1])
+        sum += max_rev
+        records.append(optimal_p)
+        for k in range(m):
+            _, val = optimal_purchase(optimal_p, Value[k])
+            if val > 0:
+                T_bound[k] += 1
+                if k == idx:
+                    T_fact[k] += 1
+        
+    return sum, records")
+
+对抗情形：
+#codex("def adversarial_online_pricing(m, types, Time, Value, Price_curves, theta=10):
+    theta_p = [np.random.exponential(scale=1/theta) for _ in Price_curves]
+    r_sum = np.zeros(len(Price_curves))
+    sum = 0
+    records = []
+    for time in range(Time):
+        optimal_p = Price_curves[np.argmax(r_sum + theta_p)]
+        idx = types[time]
+        _, val = optimal_purchase(optimal_p, Value[idx])
+
+        for k, p in enumerate(Price_curves):
+            stage = 0
+            if val > 0:
+                # print(p, Value[idx])
+                stage = np.searchsorted(p[0], optimal_purchase(p, Value[idx])[1], side=\"left\")
+                if stage >= len(p[0]):
+                    stage = len(p[0]) - 1
+                r_sum[k] += p[1][stage]
+            else:
+                for j in range(m):
+                    if optimal_purchase(p, Value[j])[1] == 0:
+                        stage = np.searchsorted(p[0], optimal_purchase(p, Value[j])[1], side=\"left\")
+                        if stage >= len(p[0]):
+                            stage = len(p[0]) - 1
+                        r_sum[k] += p[1][stage]  
+        stage = np.searchsorted(optimal_p[0], val, side=\"left\")
+        if stage >= len(optimal_p[0]):
+            stage = len(optimal_p[0]) - 1
+        sum += optimal_p[1][stage]
+        records.append(optimal_p)
+    return sum, records")
+
+其中 optimal_purchase 函数用于计算最优购买.
+
+#codex("def optimal_purchase(P, V):
+    max_rev, val= 0, 0
+    for i in range(1, len(V)):
+        stage = np.searchsorted(P[0], i, side=\"left\")
+        if stage >= len(P[0]):
+            stage = len(P[0]) - 1
+        rev = V[i] - P[1][stage]
+        if rev > max_rev:
+            max_rev = rev
+            val = i
+    return max_rev, val")
 == Test Case Generation
 
 
