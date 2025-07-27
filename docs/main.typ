@@ -560,15 +560,19 @@ $W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon)
 
 其中 $i_t$ 是从买家的分布中按照概率随机抽取的。
 
-=== 定理 4.1：算法的期望遗憾足够小
+=== 定理 4.1：算法 3 造成的期望遗憾足够小
+
+#theorem(name: strong("Theorem 4.1"))[
+    定理的内容是：只要计算 $overline(cal(P))$ 用的误差上界 $epsilon in cal(O) (1/ sqrt(T))$
+那么使用算法3造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) $
+]
+
+#proof[
 
 我们只要将 $overline(cal(P))$ 取得误差足够小，这是我们在三个选择算法中均保证过的，因为我们可以根据输入的最大误差来用不同的方法选取函数，那么可以保证用算法 3 造成的遗憾值足够小。
 
-定理的内容是：只要计算 $overline(cal(P))$ 用的误差上界 $epsilon in cal(O) (1/ sqrt(T))$
-那么使用算法3造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) $
 
-
-==== 步骤 1：切分遗憾
+1. 将遗憾值切分
 
 将遗憾值 $R_T$ 从最优值-实际值改写为（最优值-可能达到的最优值）+（可能达到的最优值-实际值），即 $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p) + T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))$
 
@@ -578,39 +582,21 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 接下来我们只需要研究在我们选出的 $overline(cal(P))$ 集合中，我们逼近可以选择的最优函数的过程造成了什么损失了。
 
-==== 步骤二：引理 C.1：逼近最优选择的过程中不会造成太大误差
+2. 引理 C.1：算法逼近最优选择的过程中不会造成太大误差
 
-这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))  <= tilde(O) (m sqrt(T))$
+表示在算法逐渐逼近可以选择的最优 $p$ 的过程中，不会造成很大的遗憾
 
-
-== 买家类型被对手提前确定时的卖家定价算法
-
-显然，作为买家方，我们可以针对卖家的定价方法针对性地做局，安排相应类型的买家使得卖家挣不到钱。例如可以先压价在买，或者先抬价再不买。这就需要卖家用一些方法来解决。
-
-
-我们只要将 $overline(cal(P))$ 取得误差足够小，这是我们在三个选择算法中均保证过的，因为我们可以根据输入的最大误差来用不同的方法选取函数，那么可以保证用算法 3 造成的遗憾值足够小。
-
-定理的内容是：只要计算 $overline(cal(P))$ 用的误差上界 $epsilon in cal(O) (1/ sqrt(T))$
-那么使用算法3造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) $
-
-
-==== 步骤 1：切分遗憾
-
-将遗憾值 $R_T$ 从最优值-实际值改写为（最优值-可能达到的最优值）+（可能达到的最优值-实际值），即 $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p) + T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))$
-
-$T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由于我们从所有定价函数中选了一部分，导致可能实际上达不到最优，实际的最优与我们的最优差了多少呢？
-
-我们在选择函数的算法中那一部分已经知道了这个差距范围是 $T dot cal(O)(epsilon) = T dot cal(O) (frac(1,sqrt(T))) = cal(O) (sqrt(T))$
-
-接下来我们只需要研究在我们选出的 $overline(cal(P))$ 集合中，我们逼近可以选择的最优函数的过程造成了什么损失了。
-
-==== 步骤二：引理 C.1：逼近最优选择的过程中不会造成太大误差
-
-这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t))  <= tilde(O) (m sqrt(T))$
+#axiom(name: strong("Lemma C.1"))[
+这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t)) ] <= tilde(O) (m sqrt(T))$
+]
 
 
 
-== 买家类型被对手提前确定时的卖家定价算法
+
+]
+
+
+== 对抗性场景下的算法
 
 
 显然，作为买家方，我们可以针对卖家的定价方法针对性地做局，安排相应类型的买家使得卖家挣不到钱。例如可以先压价再买，或者先抬价再不买。这就需要卖家用一些方法来解决
@@ -636,11 +622,11 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 我们需要一个指标来衡量每个定价函数的收益，因为收益越高代表至少我们觉得它越好，在算法中，我们使用符号 $r_tau(p)$ 表示第 $tau$ 轮我们通过实际买卖或者估计算出的卖家定价函数 $p$ 的本轮收益。每一轮收益加起来就是这个定价函数的收益了。
 
-接下来执行 T 轮以下步骤，不妨令本文为第 t 轮：
+接下来执行 T 轮以下步骤，不妨令本轮次为第 t 轮：
 
 ==== 选择累计收益最高的卖家定价
 
-我们将每一轮的收益 $r_tau(p)$ 加起来，再加上之前指定的随机扰动 $theta_p$，得到估计的收益 $sum_(tau=1)^(T-1)r_tau(p) + theta_p$。选出结果最大的那个 $p$ 然后用这个 $p$ 这一轮买卖卖数据。
+我们将每一轮的收益 $r_tau(p)$ 加起来，再加上之前指定的随机扰动 $theta_p$，得到估计的收益 $sum_(tau=1)^(T-1)r_tau(p) + theta_p$。选出结果最大的那个 $p$ 然后用这个 $p$ 在这一轮买卖卖数据。
 
 ==== 完成本轮的收益估计
 
@@ -652,7 +638,55 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 
 以上这两步需要对所有的卖家定价函数 $p in overline(cal(P))$ 进行。
 
-=== 定理 5.1：算法 4 给出了足够优秀的的卖家定价函数
+=== 定理 5.1：算法 4 造成的遗憾足够小
+
+#theorem(name: strong("Theorem 5.1"))[
+
+只要按照 $epsilon = cal(O) (1/ sqrt(T))$ 来计算 $overline(cal(P))$ ，那么使用算法 4 造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m^2  theta T + theta^(-1)(1+log(|overline(cal(P))|))) $
+
+只要设定 $theta = sqrt((1+log(|overline(cal(P))|))/(m^2 T))$，有 $bb(E) [ R_T ] in cal(O) ( m sqrt(T log(|overline(cal(P))|)) )$
+]
+
+#proof[
+
+1. 将遗憾值切分
+
+将遗憾值 $R_T$ 从最优值-实际值改写为（最优值-可能达到的最优值）+（可能达到的最优值-实际值），即 $max_(p in cal(P)) sum_(t=1)^T r(i_t,p) - max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) + max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)$
+
+$max_(p in cal(P)) sum_(t=1)^T r(i_t,p) - max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p)$ 这个部分表示由于我们从所有定价函数中选了一部分，导致可能实际上达不到最优，实际的最优与我们的最优差了多少呢？
+
+我们在选择函数的算法中那一部分已经知道了这个差距范围是 $T dot cal(O)(epsilon) = T dot cal(O) (frac(1,sqrt(T))) = cal(O) (sqrt(T))$
+
+接下来我们只需要研究在我们选出的 $overline(cal(P))$ 集合中，我们逼近可以选择的最优函数的过程造成了什么损失了。以下的引理 B.1 证明证明了我们算法过程中的期望遗憾不是很大。
+
+#axiom(name: strong("Theorem B.1"))[
+$    
+bb(E)[max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)] in cal(O) (m sqrt(T log(|overline(cal(P))|)))
+$
+]
+遗憾为真实收益
+
+将遗憾切分为三项：
+
+1. 真实的收益和最优的收益之差
+
+$bb(E)[ sum_(t=1)^T (r(i_t,p) - r_t(p^*))] <= 0 $ 由于玩家买则估计收益就是真实收益，不买我们仍然有最优收益，所以估计收益大于实际收益，所以这个期望小于 0 。
+
+2. 估计的收益与下一轮收益的差的期望
+
+$bb(E) sum_(t=1)^T (r_t (p^*) - r_t (p_(t+1))) <= (1+log(|overline(cal(P))|))/ theta$ 
+
+
+由于我们之前算的 $|overline(cal(P))|$ 是一个 $x^m$ 的形式，所以带入后 
+
+$
+  bb(E)[max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)] in cal(O) (m sqrt(T log(|overline(cal(P))|))) \ 
+  in cal(O) (m sqrt(T log(x^m))) in tilde(cal(O)) (m dot sqrt(T m)) in tilde(cal(O)) (m^(3/2) sqrt(T))
+  
+$
+
+
+]
 
 
 = Algorithm Specification
