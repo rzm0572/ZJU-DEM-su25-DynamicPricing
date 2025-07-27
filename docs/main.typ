@@ -6,13 +6,29 @@
     course: "数据要素市场",
     name: "大作业：数据动态定价算法实现",
     author: "任朱明  李文耀  江舜尧",
-    school_id: "3230103484  3230102302  3230104792",
+    school_id: "任朱明：3230103484 
+李文耀：3230102302 
+江舜尧：3230104792",
     teacher: "刘金飞",
     date: "2025/07/22"
 )
 
 
 #outline(depth: 3)
+
+= Declaration
+
+== 工作
+
+- 我们分工完成了论文思路整理，论文中所有定理、算法的阐释，以及我们对算法本身以及证明过程的理解。我们力图按照“理论类大作业”的标准，用通俗易懂的语言，从感性到理性，从总体到细节，把算法的理论和证明过程讲清楚。
+
+- 由于本文没有代码，我们实现了全部的包括数据生成、数据处理、算法、定价函数、模拟等过程，并进行了大量的实验验证。我们对算法的实现和模拟结果进行了详细的分析。
+
+- 我们在论文中对算法的实现和模拟结果进行了详细的分析，并给出了一些作为基准的算法的实现思路。
+
+== 成果
+
+我们提交了报告和代码文件，构建方法见 README.md 文件。具体的文章分析和结果分析见报告，也就是本文。
 
 = Introduction
 
@@ -558,7 +574,6 @@ $W_i = { Z_(i-1) + Z_(i-1) dot frac(epsilon k,m) | k=1,2,3,dots,ceil((2+epsilon)
     定理的内容是：只要计算 $overline(cal(P))$ 用的误差上界 $epsilon in cal(O) (1/ sqrt(T))$
 那么使用算法3造成的遗憾的期望 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) $
 ]
-
 #proof[
 
 我们只要将 $overline(cal(P))$ 取得误差足够小，这是我们在三个选择算法中均保证过的，因为我们可以根据输入的最大误差来用不同的方法选取函数，那么可以保证用算法 3 造成的遗憾值足够小。
@@ -582,11 +597,35 @@ $T dot "OPT" - T dot max_(p in overline(cal(P))) "rev"(p)$ 这个部分表示由
 这个引理直接研究 $bb(E) [ T dot max_(p in overline(cal(P))) "rev"(p) - sum_(t=1)^T p_t (n_(i_t,p_t)) ] <= tilde(O) (m sqrt(T))$
 ]
 
+先将和的期望遗憾改写为遗憾的期望的和
+
+$
+  sum_(t=1)^T bb(E) [max_(p in overline(cal(P))) "rev"(p) -  p_t (n_(i_t,p_t)) ]
+$
+
+可以将之分为两个部分，一个部分是差距大但是概率小的部分，一个部分是差距小但概率大的部分。
+
+1. 估计的概率误差小但是概率大的部分
+
+即概率估计误差不超过 $sqrt(frac(log(T),T_(i,t)))$，符合 $q_i <= hat(q)_(i,t) <= q_i + 2 sqrt(frac(log(T),T_(i,t)))$ 的 $i$ 集合。
 
 
-
+#axiom(name: strong("Lemma C.3"))[
+最优曲线 $p^*$ 与算法算出的曲线 $p_t$ 差距小于 $2 sum_(i in S_t) sqrt(log(T)/T_(i,t))$
 ]
 
+
+根据此引理累加每一轮的误差，得到总的遗憾期望为 $93 m sqrt(T log(T)) in tilde(O) (m sqrt(T))$
+
+2. 估计的概率误差大但概率小的部分
+
+由霍夫丁不等式，误差超过 $sqrt(frac(log(T),T_(i,t)))$ 概率小于 $frac(2,T)$。由于每次收益最多相差 $1$，一共有 $m$ 种玩家造成损失，所以造成的损失最多为 $frac(2,T) dot T dot m = 2m$
+
+二者相加，总的差距量级为 $tilde(O) (m sqrt(T)) + O(2 m) = tilde(O) (m sqrt(T))$
+
+
+这样最终的遗憾期望为 $ bb(E) [R_T] in tilde(O) (m sqrt(T)) + cal(O) (sqrt(T)) in tilde(O) (m sqrt(T))$
+]
 
 == 对抗性场景下的算法
 
@@ -660,17 +699,35 @@ $
 
 将遗憾切分为三项：
 
-1. 真实的收益和最优的收益之差
+1. 最优的收益和估计的最优收益之差
 
-$bb(E)[ sum_(t=1)^T (r(i_t,p) - r_t(p^*))] <= 0 $ 由于玩家买则估计收益就是真实收益，不买我们仍然有最优收益，所以估计收益大于实际收益，所以这个期望小于 0 。
+$bb(E)[ sum_(t=1)^T (r(i_t,p^*) - r_t(p^*))] <= 0 $ 由于玩家买则估计收益就是真实收益，不买我们仍然有最优收益，所以估计收益大于实际收益，所以这个期望小于 0 。
 
-2. 估计的收益与下一轮收益的差的期望
+2. 估计的最优收益与下一轮收益的差的期望
 
 $bb(E) sum_(t=1)^T (r_t (p^*) - r_t (p_(t+1))) <= (1+log(|overline(cal(P))|))/ theta$ 
 
+由于下一轮曲线应当优于这一轮，所以计的最优收益与下一轮收益的差的期望就小于于二者增加的随机干扰项的期望的和。
+
+所以这个式子的范围不会超过 $2 bb(E) (theta) in cal(O) ((1+log(|overline(cal(P))|))/ theta)$
+
+3. 下一轮收益与本轮收益的差的期望
+
+$bb(E) [ sum_(t=1)^T (r_t (p_(t+1 ))-r_t (p_t)) ] <= m^2 theta T$
+
+这是因为这个式子的意义是两轮间卖家定价是否发生变化，只要扰动足够大，由于指数分布的特性，可以用不等式推导只有有小于 $m theta$ 的概率，卖家定价发生变化。变化最多为 $m$，所以综合来看这个部分 $T$ 轮造成的损失 $<= m^2 theta T$ 。
+
+
+三者相加，就是最优收益与本轮收益差的期望。
+
+$bb(E)[ sum_(t=1)^T (r(i_t,p^*) - r_t (p_t)) ] <= (1+log(|overline(cal(P))|))/ theta + m^2 theta T$
+
+当选择 $theta = sqrt((1+log(|overline(cal(P))|))/(m^2 T))$ 时，有
+
+$bb(E)[ sum_(t=1)^T (r(i_t,p^*) - r_t (p_t)) ] <= cal(O) (m sqrt(T log(|overline(cal(P))|)))$
+
 
 由于我们之前算的 $|overline(cal(P))|$ 是一个 $x^m$ 的形式，所以带入后 
-
 $
   bb(E)[max_(p in overline(cal(P))) sum_(t=1)^T r(i_t,p) - sum_(t=1)^T r(i_t,p_t)] in cal(O) (m sqrt(T log(|overline(cal(P))|))) \ 
   in cal(O) (m sqrt(T log(x^m))) in tilde(cal(O)) (m dot sqrt(T m)) in tilde(cal(O)) (m^(3/2) sqrt(T))
@@ -679,6 +736,7 @@ $
 
 
 ]
+
 
 
 = Algorithm Specification
@@ -833,6 +891,7 @@ $
 类型为 $i_t$ 的买家会买走 $n_(i_t,p_t)$ 个数据点，并付钱 $p_t (n_(i_t,p_t))$。
 
 其中 $i_t$ 是从买家的分布中按照概率随机抽取的。
+
 
 
 == 买家类型被对手提前确定时的卖家定价算法
